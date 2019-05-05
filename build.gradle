@@ -2,7 +2,14 @@
 
 buildscript {
     ext.kotlin_version = '1.3.31'
+    //ext.androidxArchVersion = '2.0.0'
+    //ext.coroutines = '1.2.0'
+    //ext.archLifecycleVersion = '2.1.0-alpha04'
+//    ext.archLifecycleVersion = '2.1.0'
     ext.room_version = '2.1.0-alpha07'
+   // ext.roomVersion = '2.1.0-alpha07'
+    ext.lifecycle_version = "2.0.0"
+
     repositories {
         google()
         jcenter()
@@ -27,3 +34,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
