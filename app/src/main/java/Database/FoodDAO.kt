@@ -15,6 +15,9 @@ interface FoodDAO {
     @Query("SELECT * FROM food_table where foodId in (:id)")
     fun getFoodById(id: Int): Food
 
+    @Query("delete from food_table")
+    fun deleteAllFoods()
+
    // @Query("SELECT * FROM food_table WHERE meal IS Breakfast")
 
     //vararg -> Variable number of arguments

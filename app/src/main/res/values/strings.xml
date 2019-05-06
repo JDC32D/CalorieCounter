@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">CalorieCounter</string>
+
+    <string name="addTitle">Enter Nutritional Information</string>
+    <string name="enterCal">Enter Calories</string>
+    <string name="enterName">Enter Name</string>
+    <string name="enterSodium">Enter Sodium</string>
+    <string name="enterCarbs">Enter Carbohydrates</string>
+    <string name="enterFat">Enter Fats</string>
+    <string name="enterProtein">Enter Protein</string>
+
+    <string name="addBtn">Add Food</string>
+    <string name="editFood">Edit Food</string>
+    <string name="addFood">Add Food</string>
+
+    <string name="saveFood">Food Saved</string>
+    <string name="errSaveFood">Error Saving Food</string>
+
+    <string name="updatedFood">Food Updated</string>
+    <string name="errUpdatingFood">Error Updating Food</string>
+
+    <string name="deleteFood">Food Deleted</string>
+    <string name="errDelFood">Error Deleting Food</string>
+
+    <string name="delAllFoods">Delete All Foods</string>
+
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+
 </resources>

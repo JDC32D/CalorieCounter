@@ -18,7 +18,7 @@ class FoodRecyclerAdapter(foods: ArrayList<Food>, listener: OnItemClickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
-        return RecyclerViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_list, parent, false))
+        return RecyclerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -30,8 +30,8 @@ class FoodRecyclerAdapter(foods: ArrayList<Food>, listener: OnItemClickListener)
         var nameFood = currentFood.name
         var calorieFood = currentFood.calories
 
-        holder!!.foodName.text = nameFood
-        holder!!.foodCal.text = calorieFood.toString()
+        holder.foodName.text = nameFood
+        holder.foodCal.text = calorieFood.toString()
 
         holder.bind(currentFood, listenerFood)
     }

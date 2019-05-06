@@ -12,21 +12,29 @@ abstract class FoodDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: FoodDatabase? = null
-
         fun getDatabase(context: Context): FoodDatabase {
-            val tempInstance = INSTANCE
-            if(tempInstance != null) {
-                return tempInstance
+            if(INSTANCE == null) {
+                INSTANCE = Room.databaseBuilder(context.applicationContext, FoodDatabase::class.java, "foodsDb")
+                    // Blocking the main thread is not safe, need to find a safer way to do this
+                    .allowMainThreadQueries().build()
             }
-            synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    FoodDatabase::class.java,
-                    "Food_Database"
-                ).build()
-                INSTANCE = instance
-                return instance
-            }
+            return INSTANCE as FoodDatabase
         }
+
+//        fun getDatabase(context: Context): FoodDatabase {
+//            val tempInstance = INSTANCE
+//            if(tempInstance != null) {
+//                return tempInstance
+//            }
+//            synchronized(this) {
+//                val instance = Room.databaseBuilder(
+//                    context.applicationContext,
+//                    FoodDatabase::class.java,
+//                    "Food_Database"
+//                ).build()
+//                INSTANCE = instance
+//                return instance
+//            }
+//        }
     }
 }
