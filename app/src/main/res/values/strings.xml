@@ -30,4 +30,16 @@
     <string name="totalCal">Total Calories</string>
     <string name="dynamicTotalCal">Total Calories: %1s</string>
 
+    <string name="channel_name">channel</string>
+    <string name="channel_description">channel description</string>
+
+    <string name="schulteTitle">Out of context Schulte quote from old notes:</string>
+    <string-array name="Schulte">
+        <item>“You will love it because I tell you that you will love it” -Schulte</item>
+        <item>“The names in this book have been changed to protect the guilty” -Schulte</item>
+        <item>“I don’t know, and thats your problem and YOU have to deal with it.” -Schulte</item>
+        <item>“It will be an eruption larger than krakatoa, but you can use strings as keys.” -Schulte</item>
+        <item>“We will meet at 2:45 on tuesday for my last chance to kill all of you off” -Schulte</item>
+    </string-array>
+
 </resources>

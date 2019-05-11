@@ -9,37 +9,36 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
-import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.add_food_layout.*
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.R.attr.start
 import android.animation.ValueAnimator
-import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.animation.ArgbEvaluator
-import kotlinx.android.synthetic.main.item_list.*
-import kotlinx.android.synthetic.main.item_list.view.*
-import androidx.core.os.HandlerCompat.postDelayed
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import androidx.annotation.ContentView
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.os.Build
 import androidx.core.animation.doOnEnd
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import java.util.*
 
 
-class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListener, AddFoodFragment.AddListener {
+class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListener {
 
     private var foodRecyclerView: RecyclerView? = null
     private var recyclerViewAdapter: FoodRecyclerAdapter? = null
     private var viewModel: FoodListViewModel? = null
     private var db: FoodDatabase? = null
     private var totalCals: Int = 0
+    private var schulteQuotes = arrayOf<String>()
+    private var CHANNEL_ID = "schulte"
+    private var notificationId = 1
 
     // I decided to have the add_food be done in an activity, this fragment currently does nothing
     private var foodFragment = supportFragmentManager.findFragmentById(R.id.add_food) as AddFoodFragment?
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
         foodRecyclerView = findViewById(R.id.recycler_view)
         recyclerViewAdapter = FoodRecyclerAdapter(arrayListOf(), this)
 
-        // This is unsafe if moving it to a fragment
+        // This is unsafe if moving it to a fragment...maybe just unsafe
         foodRecyclerView!!.layoutManager = LinearLayoutManager(this)
         foodRecyclerView!!.adapter = recyclerViewAdapter
 
@@ -88,16 +87,51 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
             }
 
         }
+        createNotificationChannel()
 
     }
 
-    override fun onItemClick(food: Food, view: View) {
+    // Schulte said funny things all the time and these are my favorites
+    private fun createNotification() {
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_pregnant_woman_black_24dp)
+            .setContentTitle(getString(R.string.schulteTitle))
+            .setContentText(getRandQuote())
+            .setStyle(NotificationCompat.BigTextStyle())
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
+        with(NotificationManagerCompat.from(this)) {
+            notify(notificationId, builder.build())
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+       createNotification()
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    override fun onItemClick(food: Food, view: View) {
         val intent = Intent(applicationContext, FoodDetailsActivity::class.java)
         intent.putExtra("idFood", food.id)
         startActivity(intent)
         overridePendingTransition(R.transition.fade_in, R.transition.fade_out)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -122,17 +156,18 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
         db!!.foodDao().deleteAllFoods()
     }
 
-    override fun addPressed() {
-        Log.wtf("ready()", "ready called from fab")
-        saveFood()
-    }
-
-    private fun saveFood() {
-        val nameFood = addName?.text.toString()
-        val calFood = addCal?.text.toString()
-        Log.wtf("ready()","\nname: $nameFood \ncal: $calFood" )
-        val food = Food(0,nameFood,calFood.toInt())
-        viewModel?.addFood(food)
+    private fun getRandQuote() : String {
+        schulteQuotes = resources.getStringArray(R.array.Schulte)
+        val rand = Random().nextInt(schulteQuotes.size)
+        return schulteQuotes[rand]
     }
 
 }
+
+//    private fun saveFood() {
+//        val nameFood = addName?.text.toString()
+//        val calFood = addCal?.text.toString()
+//        Log.wtf("ready()","\nname: $nameFood \ncal: $calFood" )
+//        val food = Food(0,nameFood,calFood.toInt())
+//        viewModel?.addFood(food)
+//    }
