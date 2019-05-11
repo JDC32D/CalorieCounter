@@ -14,7 +14,7 @@ class FoodRecyclerAdapter(foods: ArrayList<Food>, listener: OnItemClickListener)
     private var listenerFood: OnItemClickListener = listener
 
     interface OnItemClickListener {
-        fun onItemClick(food: Food)
+        fun onItemClick(food: Food, view: View)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
@@ -26,9 +26,9 @@ class FoodRecyclerAdapter(foods: ArrayList<Food>, listener: OnItemClickListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-        var currentFood: Food = listFoods[position]
-        var nameFood = currentFood.name
-        var calorieFood = currentFood.calories
+        val currentFood: Food = listFoods[position]
+        val nameFood = currentFood.name
+        val calorieFood = currentFood.calories
 
         holder.foodName.text = nameFood
         holder.foodCal.text = calorieFood.toString()
@@ -46,7 +46,7 @@ class FoodRecyclerAdapter(foods: ArrayList<Food>, listener: OnItemClickListener)
         var foodCal = itemView.findViewById<TextView>(R.id.calorie_food)!!
         fun bind(food: Food, listener: OnItemClickListener) {
             itemView.setOnClickListener {
-                listener.onItemClick(food)
+                listener.onItemClick(food, itemView)
             }
         }
     }

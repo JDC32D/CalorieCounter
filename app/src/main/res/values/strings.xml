@@ -27,4 +27,7 @@
     <string name="done">Done</string>
     <string name="delete">Delete</string>
 
+    <string name="totalCal">Total Calories</string>
+    <string name="dynamicTotalCal">Total Calories: %1s</string>
+
 </resources>

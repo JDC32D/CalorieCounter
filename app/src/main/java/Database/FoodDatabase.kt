@@ -15,7 +15,10 @@ abstract class FoodDatabase : RoomDatabase() {
         fun getDatabase(context: Context): FoodDatabase {
             if(INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.applicationContext, FoodDatabase::class.java, "foodsDb")
-                    // Blocking the main thread is not safe, need to find a safer way to do this
+                    /*
+                     * Blocking the main thread is not safe, need to find a safer way to do this
+                     * Added Async task to ViewModel to help make this safer
+                     */
                     .allowMainThreadQueries().build()
             }
             return INSTANCE as FoodDatabase

@@ -4,7 +4,6 @@ import Database.Food
 import Database.FoodDAO
 import Database.FoodDatabase
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,7 +23,7 @@ class FoodDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_food_layout)
-        var db: FoodDatabase = FoodDatabase.getDatabase(this)
+        val db: FoodDatabase = FoodDatabase.getDatabase(this)
         foodDao = db.foodDao()
         viewModel = ViewModelProviders.of(this).get(FoodListViewModel::class.java)
 
@@ -41,7 +40,7 @@ class FoodDetailsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        var inflater: MenuInflater = menuInflater
+        val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_items, menu)
         return true
     }
@@ -58,13 +57,14 @@ class FoodDetailsActivity : AppCompatActivity() {
                     updateFood()
                     Toast.makeText(this, getString(R.string.updatedFood), Toast.LENGTH_SHORT).show()
                 }
-
                 finish()
+                overridePendingTransition(R.transition.fade_in, R.transition.fade_out)
             }
             R.id.delete_item -> {
                 deleteFood()
                 Toast.makeText(this, getString(R.string.deleteFood), Toast.LENGTH_SHORT).show()
                 finish()
+                overridePendingTransition(R.transition.fade_in, R.transition.fade_out)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -79,9 +79,9 @@ class FoodDetailsActivity : AppCompatActivity() {
     }
 
     private fun saveFood() {
-        var nameFood = addName.text.toString()
-        var calFood = addCal.text.toString()
-        var food = Food(0, nameFood, calFood.toInt())
+        val nameFood = addName.text.toString()
+        val calFood = addCal.text.toString()
+        val food = Food(0, nameFood, calFood.toInt())
         viewModel!!.addFood(food)
     }
 
@@ -90,9 +90,9 @@ class FoodDetailsActivity : AppCompatActivity() {
     }
 
     private fun updateFood() {
-        var nameFood = addName.text.toString()
-        var calFood = addCal.text.toString()
-        var contact = Food(food!!.id, nameFood, calFood.toInt())
+        val nameFood = addName.text.toString()
+        val calFood = addCal.text.toString()
+        val contact = Food(food!!.id, nameFood, calFood.toInt())
         foodDao!!.update(contact)
     }
 }

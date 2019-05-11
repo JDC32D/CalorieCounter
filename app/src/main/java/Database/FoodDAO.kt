@@ -18,6 +18,9 @@ interface FoodDAO {
     @Query("delete from food_table")
     fun deleteAllFoods()
 
+    @Query("SELECT calories FROM food_table")
+    fun getAllCalories(): LiveData<List<Int>>
+
    // @Query("SELECT * FROM food_table WHERE meal IS Breakfast")
 
     //vararg -> Variable number of arguments

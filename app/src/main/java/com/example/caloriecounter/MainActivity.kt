@@ -20,6 +20,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_food_layout.*
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.R.attr.start
+import android.animation.ValueAnimator
+import android.animation.ValueAnimator.AnimatorUpdateListener
+import android.animation.ArgbEvaluator
+import kotlinx.android.synthetic.main.item_list.*
+import kotlinx.android.synthetic.main.item_list.view.*
+import androidx.core.os.HandlerCompat.postDelayed
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import androidx.annotation.ContentView
+import androidx.core.animation.doOnEnd
+
 
 class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListener, AddFoodFragment.AddListener {
 
@@ -27,7 +39,10 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
     private var recyclerViewAdapter: FoodRecyclerAdapter? = null
     private var viewModel: FoodListViewModel? = null
     private var db: FoodDatabase? = null
-    private var foodFragment = supportFragmentManager.findFragmentById(R.id.food_fragment) as AddFoodFragment?
+    private var totalCals: Int = 0
+
+    // I decided to have the add_food be done in an activity, this fragment currently does nothing
+    private var foodFragment = supportFragmentManager.findFragmentById(R.id.add_food) as AddFoodFragment?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,21 +62,42 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
             recyclerViewAdapter!!.addFoods(foods!!)
         })
 
+        viewModel!!.getAllCals().observe(this, Observer { cal ->
+            Log.wtf("cal", "$cal")
+            totalCals = 0
+            cal.forEach { cal ->
+                totalCals += cal
+            }
+            calsChanged()
+        })
+
         fab.setOnClickListener {
-//            if (foodFragment == null) {
-//                foodFragment = AddFoodFragment()
-//                AddFoodFragment().show(supportFragmentManager, "TAG")
-//            }
-            var intent = Intent(applicationContext, FoodDetailsActivity::class.java)
-            startActivity(intent)
+
+            val colorFrom = R.color.red
+            val colorTo = R.color.navy
+            val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+            colorAnimation.duration = 50 // milliseconds
+            colorAnimation.addUpdateListener { animator -> fab.setBackgroundColor(animator.animatedValue as Int) }
+            colorAnimation.start()
+
+            // I don't think this is blocking, is it?
+            val intent = Intent(applicationContext, FoodDetailsActivity::class.java)
+            colorAnimation.doOnEnd {
+                startActivity(intent)
+                overridePendingTransition(R.transition.fade_in, R.transition.fade_out)
+            }
+
         }
 
     }
 
-    override fun onItemClick(food: Food) {
-        var intent = Intent(applicationContext, FoodDetailsActivity::class.java)
+    override fun onItemClick(food: Food, view: View) {
+
+        val intent = Intent(applicationContext, FoodDetailsActivity::class.java)
         intent.putExtra("idFood", food.id)
         startActivity(intent)
+        overridePendingTransition(R.transition.fade_in, R.transition.fade_out)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -78,6 +114,10 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
         return super.onOptionsItemSelected(item)
     }
 
+    private fun calsChanged() {
+        totalCal.text = getString(R.string.dynamicTotalCal, totalCals.toString())
+    }
+
     private fun deleteAllFoods() {
         db!!.foodDao().deleteAllFoods()
     }
@@ -88,10 +128,10 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
     }
 
     private fun saveFood() {
-        var nameFood = addName?.text.toString()
-        var calFood = addCal?.text.toString()
+        val nameFood = addName?.text.toString()
+        val calFood = addCal?.text.toString()
         Log.wtf("ready()","\nname: $nameFood \ncal: $calFood" )
-        var food = Food(0,nameFood,calFood.toInt())
+        val food = Food(0,nameFood,calFood.toInt())
         viewModel?.addFood(food)
     }
 
