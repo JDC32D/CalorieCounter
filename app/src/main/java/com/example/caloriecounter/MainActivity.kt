@@ -17,10 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.view.MenuItem
 import android.animation.ValueAnimator
 import android.animation.ArgbEvaluator
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import androidx.core.animation.doOnEnd
@@ -93,7 +91,7 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
 
     // Schulte said funny things all the time and these are my favorites
     private fun createNotification() {
-        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_pregnant_woman_black_24dp)
             .setContentTitle(getString(R.string.schulteTitle))
             .setContentText(getRandQuote())
@@ -163,11 +161,3 @@ class MainActivity : AppCompatActivity(), FoodRecyclerAdapter.OnItemClickListene
     }
 
 }
-
-//    private fun saveFood() {
-//        val nameFood = addName?.text.toString()
-//        val calFood = addCal?.text.toString()
-//        Log.wtf("ready()","\nname: $nameFood \ncal: $calFood" )
-//        val food = Food(0,nameFood,calFood.toInt())
-//        viewModel?.addFood(food)
-//    }
